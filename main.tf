@@ -1190,6 +1190,26 @@ resource "aws_vpn_gateway_route_propagation" "intra" {
 }
 
 ################################################################################
+# VPN Connection
+################################################################################
+
+resource "aws_vpn_connection" "this" {
+  for_each = var.enable_vpn_connection ? { for idx, customer_gateway in var.customer_gateways: idx => customer_gateway } : {}
+
+  type                = "ipsec.1"
+  customer_gateway_id = aws_customer_gateway.this[each.key].id
+  vpn_gateway_id      = aws_vpn_gateway.this[0].id
+  static_routes_only  = true
+}
+
+resource "aws_vpn_connection_route" "this" {
+  for_each = var.enable_vpn_connection ? { for idx, customer_gateway in var.customer_gateways: idx => customer_gateway } : {}
+
+  vpn_connection_id       = aws_vpn_connection.this[each.key].id
+  destination_cidr_block  = var.vpn_connect_destination
+}
+
+################################################################################
 # Default VPC
 ################################################################################
 

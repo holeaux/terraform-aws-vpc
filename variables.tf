@@ -1291,6 +1291,22 @@ variable "vpn_gateway_tags" {
 }
 
 ################################################################################
+# VPN Connection
+################################################################################
+
+variable "enable_vpn_connection" {
+  description = "Should be true if you want to create a VPN Connection with VPN Gateway and Customer Gateway"
+  type        = bool
+  default     = false
+}
+
+variable "vpn_connect_destination" {
+  description = "The CIDR block associated with the local subnet of the customer network"
+  type        = string
+  default     = ""
+}
+
+################################################################################
 # Default VPC
 ################################################################################
 

@@ -526,6 +526,36 @@ output "vgw_arn" {
   value       = try(aws_vpn_gateway.this[0].arn, null)
 }
 
+output "vpg_asn" {
+  description = "The ASN of the VPN Gateway"
+  value       = try(aws_vpn_gateway.this[0].amazon_side_asn)
+}
+
+
+################################################################################
+# Default VPC
+################################################################################
+
+output "tunnel1_address" {
+  description = "List of IP Addresses of VPN Tunnel-1"
+  value       = [for k, v in aws_vpn_connection.this : v.tunnel1_address]
+}
+
+output "tunnel1_passkeys" {
+  description = "List of IP Addresses of VPN Tunnel-1"
+  value       = [for k, v in aws_vpn_connection.this : v.tunnel1_preshared_key]
+}
+
+output "tunnel2_address" {
+  description = "List of IP Addresses of VPN Tunnel-2"
+  value       = [for k, v in aws_vpn_connection.this : v.tunnel2_address]
+}
+
+output "tunnel2_passkeys" {
+  description = "List of IP Addresses of VPN Tunnel-2"
+  value       = [for k, v in aws_vpn_connection.this : v.tunnel2_preshared_key]
+}
+
 ################################################################################
 # Default VPC
 ################################################################################
