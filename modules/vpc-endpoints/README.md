@@ -4,7 +4,7 @@ Terraform sub-module which creates VPC endpoint resources on AWS.
 
 ## Usage
 
-See [`examples`](../../examples) directory for working examples to reference:
+See [`examples`](https://github.com/terraform-aws-modules/terraform-aws-vpc/tree/master/examples) directory for working examples to reference:
 
 ```hcl
 module "endpoints" {
@@ -22,13 +22,24 @@ module "endpoints" {
     dynamodb = {
       # gateway endpoint
       service         = "dynamodb"
+      service_type    = "Gateway"
       route_table_ids = ["rt-12322456", "rt-43433343", "rt-11223344"]
       tags            = { Name = "dynamodb-vpc-endpoint" }
     },
     sns = {
-      service    = "sns"
-      subnet_ids = ["subnet-12345678", "subnet-87654321"]
-      tags       = { Name = "sns-vpc-endpoint" }
+      service               = "sns"
+      subnet_ids            = ["subnet-12345678", "subnet-87654321"]
+      subnet_configurations = [
+        {
+          ipv4      = "10.8.34.10"
+          subnet_id = "subnet-12345678"
+        },
+        {
+          ipv4      = "10.8.35.10"
+          subnet_id = "subnet-87654321"
+        }
+      ]
+      tags = { Name = "sns-vpc-endpoint" }
     },
     sqs = {
       service             = "sqs"
@@ -48,21 +59,21 @@ module "endpoints" {
 
 ## Examples
 
-- [Complete-VPC](../../examples/complete) with VPC Endpoints.
+- [Complete-VPC](https://github.com/terraform-aws-modules/terraform-aws-vpc/tree/master/examples/complete) with VPC Endpoints.
 
-<!-- BEGINNING OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
+<!-- BEGIN_TF_DOCS -->
 ## Requirements
 
 | Name | Version |
 |------|---------|
 | <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 1.0 |
-| <a name="requirement_aws"></a> [aws](#requirement\_aws) | >= 5.0 |
+| <a name="requirement_aws"></a> [aws](#requirement\_aws) | >= 6.28 |
 
 ## Providers
 
 | Name | Version |
 |------|---------|
-| <a name="provider_aws"></a> [aws](#provider\_aws) | >= 5.0 |
+| <a name="provider_aws"></a> [aws](#provider\_aws) | >= 6.28 |
 
 ## Modules
 
@@ -84,6 +95,7 @@ No modules.
 | <a name="input_create"></a> [create](#input\_create) | Determines whether resources will be created | `bool` | `true` | no |
 | <a name="input_create_security_group"></a> [create\_security\_group](#input\_create\_security\_group) | Determines if a security group is created | `bool` | `false` | no |
 | <a name="input_endpoints"></a> [endpoints](#input\_endpoints) | A map of interface and/or gateway endpoints containing their properties and configurations | `any` | `{}` | no |
+| <a name="input_region"></a> [region](#input\_region) | Region where the resource(s) will be managed. Defaults to the region set in the provider configuration. If a value is provided, `service_endpoint` must be specified due to https://github.com/hashicorp/terraform-provider-aws/issues/42462 | `string` | `null` | no |
 | <a name="input_security_group_description"></a> [security\_group\_description](#input\_security\_group\_description) | Description of the security group created | `string` | `null` | no |
 | <a name="input_security_group_ids"></a> [security\_group\_ids](#input\_security\_group\_ids) | Default security group IDs to associate with the VPC endpoints | `list(string)` | `[]` | no |
 | <a name="input_security_group_name"></a> [security\_group\_name](#input\_security\_group\_name) | Name to use on security group created. Conflicts with `security_group_name_prefix` | `string` | `null` | no |
@@ -102,4 +114,4 @@ No modules.
 | <a name="output_endpoints"></a> [endpoints](#output\_endpoints) | Array containing the full resource object and attributes for all endpoints created |
 | <a name="output_security_group_arn"></a> [security\_group\_arn](#output\_security\_group\_arn) | Amazon Resource Name (ARN) of the security group |
 | <a name="output_security_group_id"></a> [security\_group\_id](#output\_security\_group\_id) | ID of the security group |
-<!-- END OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
+<!-- END_TF_DOCS -->
