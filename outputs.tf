@@ -573,7 +573,7 @@ output "vgw_arn" {
 
 output "vpg_asn" {
   description = "The ASN of the VPN Gateway"
-  value       = try(aws_vpn_gateway.this[0].amazon_side_asn)
+  value       = try(aws_vpn_gateway.this[0].amazon_side_asn, null)
 }
 
 
